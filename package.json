@@ -1,0 +1,22 @@
+{
+  "name": "photo-organise",
+  "version": "1.0.0",
+  "description": "A nodejs script for photo organisation",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hannah-choi/photo-organise.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hannah-choi/photo-organise/issues"
+  },
+  "homepage": "https://github.com/hannah-choi/photo-organise#readme"
+}
