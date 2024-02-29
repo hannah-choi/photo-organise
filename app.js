@@ -10,7 +10,7 @@ if(!foldername || !fs.existsSync(newDir)) {
 
 
 const move = (newFolderName, fileName) => {
-    const oldPath = path.join(newDir, fileName);
+    const existingPath = path.join(newDir, fileName);
     const newPath = path.join(newDir, newFolderName);
         !fs.existsSync(newPath) && 
             fs.mkdirSync(newPath, { recursive: true }, err => {
@@ -18,7 +18,7 @@ const move = (newFolderName, fileName) => {
                     console.error(err)
                 }
             })
-        fs.renameSync(oldPath, path.join(newPath, fileName), function(err){
+        fs.renameSync(existingPath, path.join(newPath, fileName), function(err){
             if(err){
                 console.error(err)
             }
@@ -26,10 +26,14 @@ const move = (newFolderName, fileName) => {
         })
 }
 
-const checkName = (fileName) => {
-    const splitted = fileName.split('_')
-    if(splitted[1].charAt(0)==='E'){
-        move('duplicate', `${splitted[0]}_${splitted[1].slice(1)}`)
+const isDuplicated = (fileName, files) => {
+    if(!fileName.startsWith('IMG_')||fileName.startsWith('IMG_E')) {
+        return false;
+    }
+    const edited = `IMG_E${fileName.split('_')[1]}`
+    const duplicated = files.find((file)=> path.basename(file) === edited)
+    if(duplicated){
+        move('duplicate', `IMG_${fileName.split('_')[1]}`)
     }
     return;
 }
@@ -41,7 +45,7 @@ fs.readdir(newDir, (err, files) => {
     else {
         console.log(`Processing in ${newDir}...`)
 
-        files.forEach(file => {
+        files.forEach((file, _, files) => {
             const fileName = path.basename(file)
             
             switch(path.extname(file)) {
@@ -54,7 +58,7 @@ fs.readdir(newDir, (err, files) => {
                     move('captured', fileName)
                     break;
                 case '.jpg':
-                    checkName(fileName)
+                    isDuplicated(fileName, files)
                     break;
                 default:
                     break;
