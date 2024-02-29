@@ -1,24 +1,29 @@
 const fs = require('fs')
 const path = require('path')
-const foldernames = process.argv; //get the argument from the script
+const foldername = process.argv[2]; //get the argument from the script
+const newDir = path.join(__dirname, foldername)
 
-const newDir = path.join(__dirname, foldernames[2])
+if(!foldername || !fs.existsSync(newDir)) {
+    console.log('Invalid Folder name. Please specify an existing folder name');
+    return;
+}
+
 
 const move = (newFolderName, fileName) => {
     const oldPath = path.join(newDir, fileName);
     const newPath = path.join(newDir, newFolderName);
-        fs.mkdir(newPath, { recursive: true }, err => {
-            if (err) {
-            console.error(err)
-            }
-            fs.rename(oldPath, path.join(newPath, fileName), function(err){
-                if(err){
+        !fs.existsSync(newPath) && 
+            fs.mkdirSync(newPath, { recursive: true }, err => {
+                if (err) {
                     console.error(err)
                 }
-                console.log(`Move ${fileName} to ${newFolderName}`)
             })
+        fs.renameSync(oldPath, path.join(newPath, fileName), function(err){
+            if(err){
+                console.error(err)
+            }
+            console.log(`Move ${fileName} to ${newFolderName}`)
         })
-
 }
 
 const checkName = (fileName) => {
